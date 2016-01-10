@@ -1,4 +1,9 @@
 {
+  "name": "express-spawner",
+  "description": "Spawns Express apps on multiple ports as different processes.",
+  "version": "0.0.1",
+  "author": "David Wu <david.wuu@gmail.com>",
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^1.14.2",
     "cors": "^2.7.1",
