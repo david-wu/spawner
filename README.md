@@ -7,7 +7,7 @@ Use with nginx.
 ## Code Example
 
 ```
-var es = require('express-spawner');
+var es = require('express-spawner')(process.cwd());
 
 es.spawnServerForever({
     ports: [9001, 9002, 9003],
@@ -15,3 +15,6 @@ es.spawnServerForever({
 });
 
 ```
+
+### TODO
+return Promise

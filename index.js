@@ -2,19 +2,19 @@ var cluster = require('cluster');
 
 
 
-function Spawner(){
-    process.on('message', messageHandler);
+function SpawnerFactory(rootPath){
+    return new Spawner(rootPath);
 }
 
-Spawner.prototype.messageHandler = function(msg){
-    if(msg && msg.type==='server'){
-        serveApp(strappedApp(msg.appPath), msg.port);
-    }
-};
+function Spawner(rootPath){
+    this.rootPath = rootPath;
+    process.on('message', messageHandler);
+}
 
 Spawner.prototype.spawn = function(options){
     if(!cluster.isMaster){return;}
     var worker = cluster.fork()
+    options.path = this.rootPath + options.appPath
     worker.send(options);
     worker.on('disconnect', options.onDisconnect || function(){});
 };
@@ -41,6 +41,12 @@ Spawner.prototype.spawnServerForever = function(options){
     this.spawnServer(options);
 };
 
+function messageHandler(msg){
+    if(msg && msg.type==='server'){
+        serveApp(strappedApp(msg.path), msg.port);
+    }
+};
+
 function strappedApp(appPath){
     var express = require('express');
     var cors = require('cors');
@@ -60,4 +66,4 @@ function serveApp(app, port){
     server.listen(port);
 };
 
-module.exports = new Spawner();
+module.exports = SpawnerFactory;
